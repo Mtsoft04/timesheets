@@ -1,0 +1,6 @@
+node_modules/
+.env
+public/assets/app.css
+public/assets/workspace.css
+public/assets/workspace.js
+npm-debug.log*

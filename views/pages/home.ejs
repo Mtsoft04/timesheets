@@ -1,0 +1,15 @@
+<%- include('../partials/head') %>
+<section class="grid gap-10 rounded-3xl bg-gradient-to-br from-blue-700 to-indigo-800 p-8 text-white md:grid-cols-[1.2fr_.8fr] md:p-14">
+  <div class="self-center">
+    <p class="mb-3 text-sm font-semibold uppercase tracking-[.2em] text-blue-200">Lập kế hoạch dễ dàng</p>
+    <h1 class="max-w-2xl text-4xl font-bold tracking-tight md:text-5xl">Cả nhóm tìm được thời gian phù hợp.</h1>
+    <p class="mt-5 max-w-xl leading-7 text-blue-100">Quản lý lịch cá nhân, phối hợp lịch đội nhóm và cập nhật công việc trong một không gian chung.</p>
+    <div class="mt-8 flex flex-wrap gap-3"><a href="/schedule" class="rounded-xl bg-white px-5 py-3 font-semibold text-blue-700 shadow-sm">Mở lịch cá nhân</a><a href="/teams" class="rounded-xl border border-white/40 px-5 py-3 font-semibold text-white hover:bg-white/10">Mở lịch nhóm</a></div>
+  </div>
+  <div class="grid gap-3 self-center sm:grid-cols-2">
+    <% [['01','Lịch cá nhân','Tổ chức tuần làm việc và ghi chú theo giờ.','/schedule'],['02','Lịch đội nhóm','Tìm giờ chung, sự kiện và tài nguyên.','/teams'],['03','Bài viết','Chia sẻ cập nhật và trao đổi với nhóm.','/community']].forEach(([n,name,desc,href]) => { %>
+      <a href="<%= href %>" class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur hover:bg-white/15"><span class="text-sm text-blue-200"><%= n %></span><h2 class="mt-5 text-lg font-semibold"><%= name %></h2><p class="mt-2 text-sm leading-6 text-blue-100"><%= desc %></p></a>
+    <% }) %>
+  </div>
+</section>
+<%- include('../partials/foot') %>

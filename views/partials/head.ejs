@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fc">
+  <title><%= title %> · Timesheets</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
+      <a class="flex items-center gap-3 font-semibold tracking-tight" href="/">
+        <span class="grid size-10 place-items-center rounded-xl bg-blue-600 text-lg text-white">T</span>
+        <span>Timesheets<span class="block text-xs font-normal text-slate-500">Plan better, together</span></span>
+      </a>
+      <nav class="flex flex-wrap items-center gap-1 text-sm" aria-label="Điều hướng chính">
+        <a class="rounded-lg px-3 py-2 hover:bg-slate-100 <%= active === 'schedule' ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600' %>" href="/schedule">Lịch cá nhân</a>
+        <a class="rounded-lg px-3 py-2 hover:bg-slate-100 <%= active === 'teams' ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600' %>" href="/teams">Đội nhóm</a>
+        <a class="rounded-lg px-3 py-2 hover:bg-slate-100 <%= active === 'community' ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600' %>" href="/community">Cộng đồng</a>
+      </nav>
+    </div>
+  </header>
+  <main class="mx-auto max-w-7xl px-5 py-10">

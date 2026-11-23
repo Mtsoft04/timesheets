@@ -1,0 +1,271 @@
+bplist00—XUTI-Data—_public.utf8-plain-text_2-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.teams (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name text NOT NULL CHECK (char_length(name) <= 60),
+  code text NOT NULL UNIQUE,
+  owner uuid NOT NULL DEFAULT auth.uid(),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT teams_pkey PRIMARY KEY (id),
+  CONSTRAINT teams_owner_fkey FOREIGN KEY (owner) REFERENCES auth.users(id)
+);
+CREATE TABLE public.team_members (
+  team_id uuid NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  name text NOT NULL CHECK (char_length(name) <= 40),
+  done boolean NOT NULL DEFAULT false,
+  role text NOT NULL DEFAULT 'member'::text CHECK (role = ANY (ARRAY['admin'::text, 'member'::text, 'viewer'::text])),
+  CONSTRAINT team_members_pkey PRIMARY KEY (team_id, user_id),
+  CONSTRAINT team_members_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
+  CONSTRAINT team_members_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.personal_slots (
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  slot_date date NOT NULL,
+  hour integer NOT NULL CHECK (hour >= 0 AND hour <= 23),
+  note text NOT NULL DEFAULT ''::text CHECK (char_length(note) <= 500),
+  CONSTRAINT personal_slots_pkey PRIMARY KEY (user_id, slot_date, hour),
+  CONSTRAINT personal_slots_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.team_busy (
+  team_id uuid NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  slot_date date NOT NULL,
+  hour integer NOT NULL CHECK (hour >= 0 AND hour <= 23),
+  note text DEFAULT ''::text,
+  CONSTRAINT team_busy_pkey PRIMARY KEY (team_id, user_id, slot_date, hour),
+  CONSTRAINT team_busy_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
+  CONSTRAINT team_busy_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.polls (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL,
+  title text NOT NULL,
+  multi boolean NOT NULL DEFAULT false,
+  closed boolean NOT NULL DEFAULT false,
+  created_by uuid NOT NULL DEFAULT auth.uid(),
+  created_by_name text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  closed_at timestamp with time zone,
+  closes_at timestamp with time zone,
+  anonymous boolean NOT NULL DEFAULT false,
+  max_votes integer CHECK (max_votes IS NULL OR max_votes > 0),
+  CONSTRAINT polls_pkey PRIMARY KEY (id),
+  CONSTRAINT polls_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id)
+);
+CREATE TABLE public.poll_options (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  poll_id uuid NOT NULL,
+  label text NOT NULL,
+  position integer NOT NULL DEFAULT 0,
+  CONSTRAINT poll_options_pkey PRIMARY KEY (id),
+  CONSTRAINT poll_options_poll_id_fkey FOREIGN KEY (poll_id) REFERENCES public.polls(id)
+);
+CREATE TABLE public.poll_votes (
+  poll_id uuid NOT NULL,
+  option_id uuid NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT poll_votes_pkey PRIMARY KEY (option_id, user_id),
+  CONSTRAINT poll_votes_poll_id_fkey FOREIGN KEY (poll_id) REFERENCES public.polls(id),
+  CONSTRAINT poll_votes_option_id_fkey FOREIGN KEY (option_id) REFERENCES public.poll_options(id)
+);
+CREATE TABLE public.team_messages (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  user_name text NOT NULL,
+  content text NOT NULL CHECK (char_length(content) >= 1 AND char_length(content) <= 500),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT team_messages_pkey PRIMARY KEY (id),
+  CONSTRAINT team_messages_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id)
+);
+CREATE TABLE public.posts (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  user_name text NOT NULL,
+  content text NOT NULL DEFAULT ''::text CHECK (char_length(content) <= 5000),
+  images ARRAY NOT NULL DEFAULT '{}'::text[] CHECK (COALESCE(array_length(images, 1), 0) <= 4),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT posts_pkey PRIMARY KEY (id),
+  CONSTRAINT posts_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.post_reactions (
+  post_id uuid NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  user_name text,
+  emoji text NOT NULL CHECK (char_length(emoji) >= 1 AND char_length(emoji) <= 8),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT post_reactions_pkey PRIMARY KEY (post_id, user_id),
+  CONSTRAINT post_reactions_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id),
+  CONSTRAINT post_reactions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.post_comments (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  post_id uuid NOT NULL,
+  parent_id uuid,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  user_name text NOT NULL,
+  content text NOT NULL CHECK (char_length(content) >= 1 AND char_length(content) <= 1000),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  reply_to uuid,
+  CONSTRAINT post_comments_pkey PRIMARY KEY (id),
+  CONSTRAINT post_comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id),
+  CONSTRAINT post_comments_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.post_comments(id),
+  CONSTRAINT post_comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.notifications (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  actor_id uuid,
+  actor_name text,
+  cat text NOT NULL CHECK (cat = ANY (ARRAY['team'::text, 'post'::text])),
+  type text NOT NULL,
+  team_id uuid,
+  post_id uuid,
+  body text NOT NULL,
+  extra text,
+  cnt integer NOT NULL DEFAULT 1,
+  read boolean NOT NULL DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT notifications_pkey PRIMARY KEY (id),
+  CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.rooms (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL,
+  name text NOT NULL CHECK (char_length(name) >= 1 AND char_length(name) <= 60),
+  kind text NOT NULL DEFAULT 'room'::text CHECK (kind = ANY (ARRAY['room'::text, 'equipment'::text])),
+  capacity integer CHECK (capacity IS NULL OR capacity > 0),
+  note text NOT NULL DEFAULT ''::text CHECK (char_length(note) <= 200),
+  created_by uuid DEFAULT auth.uid(),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT rooms_pkey PRIMARY KEY (id),
+  CONSTRAINT rooms_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id)
+);
+CREATE TABLE public.team_events (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL,
+  title text NOT NULL CHECK (char_length(title) >= 1 AND char_length(title) <= 120),
+  description text NOT NULL DEFAULT ''::text CHECK (char_length(description) <= 1000),
+  location text NOT NULL DEFAULT ''::text CHECK (char_length(location) <= 120),
+  room_id uuid,
+  event_date date NOT NULL,
+  start_hour integer NOT NULL CHECK (start_hour >= 0 AND start_hour <= 23),
+  end_hour integer NOT NULL CHECK (end_hour >= 1 AND end_hour <= 24),
+  created_by uuid NOT NULL DEFAULT auth.uid(),
+  created_by_name text NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT team_events_pkey PRIMARY KEY (id),
+  CONSTRAINT team_events_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
+  CONSTRAINT team_events_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.rooms(id)
+);
+CREATE TABLE public.event_invites (
+  event_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  user_name text NOT NULL,
+  status text NOT NULL DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'accepted'::text, 'maybe'::text, 'declined'::text])),
+  note text NOT NULL DEFAULT ''::text,
+  responded_at timestamp with time zone,
+  CONSTRAINT event_invites_pkey PRIMARY KEY (event_id, user_id),
+  CONSTRAINT event_invites_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.team_events(id),
+  CONSTRAINT event_invites_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.bookings (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL,
+  room_id uuid NOT NULL,
+  event_id uuid,
+  booked_by uuid NOT NULL DEFAULT auth.uid(),
+  booked_by_name text NOT NULL,
+  title text NOT NULL DEFAULT ''::text CHECK (char_length(title) <= 100),
+  booking_date date NOT NULL,
+  start_hour integer NOT NULL CHECK (start_hour >= 0 AND start_hour <= 23),
+  end_hour integer NOT NULL CHECK (end_hour >= 1 AND end_hour <= 24),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT bookings_pkey PRIMARY KEY (id),
+  CONSTRAINT bookings_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
+  CONSTRAINT bookings_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.rooms(id),
+  CONSTRAINT bookings_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.team_events(id)
+);
+CREATE TABLE public.tasks (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  created_by uuid NOT NULL DEFAULT auth.uid(),
+  team_id uuid,
+  assignee uuid,
+  assignee_name text,
+  event_id uuid,
+  title text NOT NULL CHECK (char_length(title) >= 1 AND char_length(title) <= 200),
+  due_date date,
+  due_hour integer CHECK (due_hour >= 0 AND due_hour <= 23),
+  done boolean NOT NULL DEFAULT false,
+  done_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT tasks_pkey PRIMARY KEY (id),
+  CONSTRAINT tasks_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id),
+  CONSTRAINT tasks_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
+  CONSTRAINT tasks_assignee_fkey FOREIGN KEY (assignee) REFERENCES auth.users(id),
+  CONSTRAINT tasks_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.team_events(id)
+);
+CREATE TABLE public.share_links (
+  token text NOT NULL DEFAULT replace((gen_random_uuid())::text, '-'::text, ''::text),
+  owner uuid NOT NULL DEFAULT auth.uid(),
+  scope text NOT NULL CHECK (scope = ANY (ARRAY['personal'::text, 'team'::text])),
+  team_id uuid,
+  name text NOT NULL DEFAULT ''::text CHECK (char_length(name) <= 40),
+  show_notes boolean NOT NULL DEFAULT false,
+  expires_at timestamp with time zone,
+  revoked boolean NOT NULL DEFAULT false,
+  views integer NOT NULL DEFAULT 0,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT share_links_pkey PRIMARY KEY (token),
+  CONSTRAINT share_links_owner_fkey FOREIGN KEY (owner) REFERENCES auth.users(id),
+  CONSTRAINT share_links_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id)
+);
+CREATE TABLE public.push_subs (
+  endpoint text NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  p256dh text NOT NULL,
+  auth text NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT push_subs_pkey PRIMARY KEY (endpoint),
+  CONSTRAINT push_subs_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.push_prefs (
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  enabled boolean NOT NULL DEFAULT true,
+  lead_min integer NOT NULL DEFAULT 10 CHECK (lead_min >= 1 AND lead_min <= 240),
+  tz_offset_min integer NOT NULL DEFAULT 0,
+  notify_events boolean NOT NULL DEFAULT true,
+  notify_tasks boolean NOT NULL DEFAULT true,
+  notify_slots boolean NOT NULL DEFAULT true,
+  CONSTRAINT push_prefs_pkey PRIMARY KEY (user_id),
+  CONSTRAINT push_prefs_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.push_log (
+  user_id uuid NOT NULL,
+  key text NOT NULL,
+  sent_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT push_log_pkey PRIMARY KEY (user_id, key)
+);
+CREATE TABLE public.profiles (
+  user_id uuid NOT NULL,
+  name text NOT NULL DEFAULT ''::text CHECK (char_length(name) <= 60),
+  avatar_url text,
+  last_seen timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT profiles_pkey PRIMARY KEY (user_id),
+  CONSTRAINT profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.direct_messages (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  sender uuid NOT NULL DEFAULT auth.uid(),
+  recipient uuid NOT NULL,
+  sender_name text NOT NULL DEFAULT ''::text,
+  content text NOT NULL CHECK (char_length(content) >= 1 AND char_length(content) <= 500),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  read_at timestamp with time zone,
+  CONSTRAINT direct_messages_pkey PRIMARY KEY (id),
+  CONSTRAINT direct_messages_sender_fkey FOREIGN KEY (sender) REFERENCES auth.users(id),
+  CONSTRAINT direct_messages_recipient_fkey FOREIGN KEY (recipient) REFERENCES auth.users(id)
+);     0                           2Q
