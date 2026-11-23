@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node scripts/build-client.mjs && tailwindcss -i ./src/styles/tailwind.css -o ./public/assets/app.css --minify",
     "predev": "npm run build",
-    "dev": "node --watch server.js",
+    "dev": "node server.js",
     "prestart": "npm run build",
     "start": "node server.js",
     "css:build": "tailwindcss -i ./src/styles/tailwind.css -o ./public/assets/app.css --minify"

@@ -64,6 +64,7 @@ document.addEventListener("pointerup",()=>{drag=null});
 
 /* ---------- đăng nhập ---------- */
 function authView(){
+  $("appNav").hidden=true;$("rd").hidden=true;$("hp").hidden=true;
   $("app").innerHTML=`<div class="auth"><div class="brand"><div class="logo" style="background:rgba(255,255,255,.18)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18M8 14h3"/></svg></div><h2>Tìm giờ cả nhóm cùng rảnh</h2><p>Mỗi người tô giờ bận của mình, Timesheet tự tìm các khung giờ trùng cho cả nhóm.</p><ul><li>Lịch cá nhân kèm ghi chú</li><li>Tạo nhóm và mời bằng mã chia sẻ</li><li>Chốt lịch và xem kết quả chung</li></ul></div>
   <div class="card form"><h2>Chào mừng bạn</h2>
   <div class="col">
@@ -84,7 +85,8 @@ function authView(){
 
 /* ---------- khung chính ---------- */
 function shell(){
-  $("app").innerHTML=`<div class="shell"><div class="tabs"><div class="seg"><button id="tm">Lịch cá nhân</button><button id="tt">Lịch đội nhóm</button><button id="tp">📰 Bài viết</button></div><span class="sp"></span><button id="rd">🗺️ Cập nhật sau</button><button id="hp">📖 Hướng dẫn</button></div><div id="body"></div></div>
+  $("appNav").hidden=false;$("rd").hidden=false;$("hp").hidden=false;
+  $("app").innerHTML=`<div class="shell"><div id="body"></div></div>
   <div class="modal" id="help" hidden><div class="card"><div class="row"><h2 style="margin:0">📖 Hướng dẫn &amp; lưu ý</h2><span class="sp"></span><button id="hx">Đóng</button></div><ul>
   <li><b>Ô xanh dương = giờ BẬN</b>, ô trống = giờ rảnh. Bấm hoặc kéo để tô.</li>
   <li>Lịch hiển thị theo <b>tuần</b>. Dùng nút ‹ ›, <b>Hôm nay</b> hoặc ô chọn ngày để chuyển tuần. Thay đổi chưa lưu sẽ tự lưu khi bạn chuyển tuần.</li>

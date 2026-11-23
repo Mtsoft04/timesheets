@@ -412,3 +412,111 @@ td.evmark{box-shadow:inset 0 0 0 2px #f59e0b}
 .odot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;border:2px solid var(--card);background:#9ca3af}
 .odot.on{background:var(--free)}
 .ubadge{display:inline-block;background:#ef4444;color:#fff;border-radius:9px;min-width:18px;height:18px;padding:0 5px;font:700 11px/18px inherit;font-style:normal;text-align:center}
+
+/* Personal schedule workspace: preserve Timesheet identity and blue palette. */
+.top .in{max-width:1760px;min-height:66px;padding:8px 24px;gap:18px}
+.brand-lock{display:flex;align-items:center;gap:10px;color:var(--tx);text-decoration:none;flex:none}
+.brand-divider{height:26px;width:1px;background:var(--bd);flex:none}
+.app-nav{display:flex;align-items:center;gap:6px;min-width:0}
+.app-nav[hidden],.header-quiet[hidden]{display:none}
+.app-nav button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--tx);white-space:nowrap}
+.app-nav button:hover{background:var(--acs);color:var(--ac)}
+.app-nav button.on{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 5px 14px color-mix(in srgb,var(--ac) 24%,transparent)}
+.app-nav button span{font-size:16px;line-height:1}
+.app-nav button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.app-header-actions{display:flex;align-items:center;gap:8px;flex:none}
+.app-header-actions .header-quiet{min-width:38px;padding:8px 10px}
+.app-header-actions #out{white-space:nowrap}
+body:has(.shell) .top .in{max-width:1760px}
+body:has(.shell) .foot{display:none}
+
+.personal-layout{gap:12px;align-items:stretch}
+.split4.personal-layout{grid-template-columns:minmax(310px,340px) minmax(520px,1fr) minmax(248px,270px) minmax(220px,240px)}
+.personal-layout>.card,.personal-layout>.rcol{min-width:0}
+.personal-sidebar{gap:12px;padding:0 14px 14px;background:var(--card);border-radius:18px}
+.personal-hero{display:flex;align-items:center;gap:14px;min-height:90px;margin:0 -14px;padding:16px 18px;border-radius:18px 18px 22px 8px;background:linear-gradient(115deg,var(--ac),color-mix(in srgb,var(--ac) 68%,#62c4ff));color:#fff}
+.personal-hero-icon{display:grid;place-items:center;width:52px;height:52px;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(255,255,255,.16);flex:none}
+.personal-hero-icon svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.personal-hero h1{margin:0;font-size:20px;line-height:1.25;letter-spacing:-.3px}
+.personal-hero p{margin:5px 0 0;color:rgba(255,255,255,.9);font-size:12px;line-height:1.45}
+.personal-mode{padding:0 2px}
+.personal-mode .seg{display:flex;width:100%;padding:3px;background:var(--head);border:1px solid var(--bd);border-radius:14px}
+.personal-mode .seg button{min-height:40px;padding:8px 10px;border-radius:11px;color:var(--mut)}
+.personal-mode .seg button.on{background:var(--ac);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--ac) 20%,transparent)}
+.personal-mode>p{margin:12px 2px 0;padding:10px 11px;border-radius:12px;background:var(--bg);font-size:12.5px;line-height:1.55}
+.personal-mode>p::before{content:"💡 ";font-size:14px}
+.personal-sidebar>.qk{gap:9px;padding:10px 2px 2px;border:0;border-radius:0;background:transparent}
+.personal-sidebar>.qk>b{font-size:14px}
+.personal-sidebar .dchips{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.personal-sidebar .dchips button{min-width:0;min-height:36px;padding:5px 2px;border:1px solid var(--bd);border-radius:11px;background:var(--bg);font-size:12px}
+.personal-sidebar .dchips button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.personal-sidebar .qk select{width:100%}
+.personal-sidebar .qrs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.personal-sidebar .qrs button{min-height:40px;padding:7px 8px;border-radius:12px;background:var(--bg);font-size:12px}
+.personal-primary-actions{display:grid;gap:8px}
+.personal-primary-actions button{min-height:42px;border-radius:12px}
+.personal-tools{gap:7px}
+.personal-tools button{min-height:39px!important;padding:7px 5px!important;border-radius:11px!important;font-size:12.5px!important}
+.personal-calendar{gap:10px;border-radius:18px;padding:10px}
+.personal-calendar .ptop{min-height:42px;gap:8px 10px;margin:0 0 2px}
+.personal-calendar .nav{gap:6px}
+.personal-calendar .nav button{min-width:38px;padding:7px 11px;border-radius:12px}
+.personal-calendar .nav input{width:140px}
+.personal-calendar .nav b{margin:0 3px;font-size:14px;white-space:nowrap}
+.personal-calendar .legend{gap:12px;font-size:12px;white-space:nowrap}
+.personal-calendar .legend i{width:10px;height:10px}
+.personal-calendar .wrap{height:calc(100dvh - 160px);min-height:500px;border-radius:13px;background:var(--card)}
+.personal-calendar .wrap table{min-height:620px}
+.personal-calendar th,.personal-calendar td{font-size:12px}
+.personal-calendar th{padding:6px 3px}
+.personal-calendar td.c{font-size:11px}
+.personal-insights,.personal-task-column{gap:12px}
+.personal-layout .rcol>.card{border-radius:18px;padding:14px}
+.personal-insights .sumc{flex:1.08 1 0;overflow:auto}
+.personal-insights .notes{flex:.92 1 0;overflow:auto}
+.personal-insights .sumc h2,.personal-insights .notes h2,.personal-task-column h2{font-size:15px}
+.personal-insights .sumt tr td,.personal-insights .sumt tr th{padding:6px 4px;font-size:12px}
+.personal-insights .mini{width:54px;height:7px}
+.personal-insights .nl{gap:5px}
+.personal-insights .ni{padding:7px 8px;border-radius:11px}
+.personal-task-column>.card{flex:1;overflow:auto}
+.personal-task-column .tkf{gap:7px}
+.personal-task-column .tkf input,.personal-task-column .tkf select{min-height:38px;border-radius:11px}
+.personal-task-column .tkf>button{min-height:40px;border-radius:12px}
+.personal-layout .wrap table{border-radius:10px}
+
+@media (min-width:901px) and (max-width:1350px){
+ .split4.personal-layout{grid-template-columns:minmax(260px,300px) minmax(0,1fr)}
+ body:has(.personal-layout){height:auto;min-height:100dvh;overflow:auto;display:block}
+ body:has(.personal-layout) main{display:block;min-height:0;padding:12px}
+ .personal-layout{height:auto}
+ .personal-calendar .wrap{height:70vh}
+ .personal-insights,.personal-task-column{min-height:420px}
+}
+@media (max-width:900px){
+ .top .in{min-height:58px;padding:8px 12px;gap:10px}
+ .brand-divider{display:none}
+ .brandname{font-size:16px}
+ .app-nav{order:3;width:100%;overflow-x:auto;padding:2px 0}
+ .app-nav button{flex:1;justify-content:center;padding:9px 10px;font-size:12px}
+ .app-header-actions{gap:4px}
+ .app-header-actions .header-quiet{display:none}
+ .personal-layout{gap:10px}
+ .personal-sidebar{padding-bottom:12px}
+ .personal-hero{min-height:78px}
+ .personal-calendar .ptop{align-items:flex-start}
+ .personal-calendar .nav{width:100%}
+ .personal-calendar .nav b{white-space:normal}
+ .personal-calendar .legend{width:100%}
+ .personal-calendar .wrap{height:68vh;min-height:460px}
+ .personal-insights,.personal-task-column{min-height:360px}
+}
+@media (max-width:600px){
+ .top .mh{height:30px}
+ .app-header-actions .thm button{padding:5px 7px}
+ .app-header-actions #who{max-width:100px;overflow:hidden;text-overflow:ellipsis}
+ .personal-sidebar .dchips{gap:4px}
+ .personal-sidebar .dchips button{font-size:11px}
+ .personal-calendar .nav input{width:125px}
+ .personal-calendar .wrap{min-height:420px}
+}

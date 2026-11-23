@@ -49,11 +49,17 @@ function bindNotes(){
 }
 function drawMe(){
   const w0=document.querySelector(".wrap"),st=w0?w0.scrollTop:0;
-  $("body").innerHTML=`<div class="split split4 big"><aside class="card side"><h2>Lịch cá nhân</h2>${noteSide()}${quickPanel()}
-   <button class="p" id="sv">Lưu lịch cá nhân</button>
-   <button id="ap" title="Sao chép lịch cá nhân sang nhóm bạn chọn">⤴ Áp dụng lịch cá nhân vào nhóm</button>
-   <div class="tools"><button id="rp">🔁 Lặp lại</button><button id="an">📊 Phân tích</button><button id="rm">🔔 Nhắc lịch</button><button id="sh">🔗 Chia sẻ</button></div></aside>
-   <section class="card pane"><div class="ptop">${navBar()}<span class="sp"></span>${legend()}</div>${grid(k=>ctx.cell(k))}</section><div class="rcol">${sumCard()}${noteCard()}</div><div class="rcol">${taskCard()}</div></div>`;
+  $("body").innerHTML=`<div class="split split4 big personal-layout">
+   <aside class="card side personal-sidebar">
+    <div class="personal-hero"><span class="personal-hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></span><div><h1>Lịch cá nhân</h1><p>Quản lý lịch làm việc, sự kiện của bạn</p></div></div>
+    <div class="personal-mode">${noteSide()}</div>${quickPanel()}
+    <div class="personal-primary-actions"><button class="p" id="sv">Lưu lịch cá nhân</button><button id="ap" title="Sao chép lịch cá nhân sang nhóm bạn chọn">⤴ Áp dụng lịch cá nhân vào nhóm</button></div>
+    <div class="tools personal-tools"><button id="rp">🔁 Lặp lại</button><button id="an">📊 Phân tích</button><button id="rm">🔔 Nhắc lịch</button><button id="sh">🔗 Chia sẻ</button></div>
+   </aside>
+   <section class="card pane personal-calendar"><div class="ptop">${navBar()}<span class="sp"></span>${legend()}</div>${grid(k=>ctx.cell(k))}</section>
+   <div class="rcol personal-insights">${sumCard()}${noteCard()}</div>
+   <div class="rcol personal-task-column">${taskCard()}</div>
+  </div>`;
   const w=document.querySelector(".wrap");if(w)w.scrollTop=st;
   bindNav();bindNotes();bindQuick();bindTasks();
   $("sv").onclick=()=>saveMe(false);$("ap").onclick=openApply;$("rp").onclick=openRepeat;$("an").onclick=openAnalytics;$("rm").onclick=openRemind;$("sh").onclick=openShare;

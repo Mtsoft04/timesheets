@@ -12,7 +12,17 @@
 <link rel="stylesheet" href="/assets/workspace.css">
 </head>
 <body data-initial-view="<%= initialView %>">
-<header class="top"><div class="in"><div class="mh" role="img" aria-label="Logo Mạnh Hưng"></div><b class="brandname">Timesheet</b><span class="sp"></span><button id="bell" class="bell" title="Thông báo" aria-label="Thông báo" hidden>🔔<i id="bdg" hidden></i></button><button id="who" type="button" title="Hồ sơ cá nhân" aria-label="Hồ sơ cá nhân"></button><button id="out" hidden>Đăng xuất</button><div class="seg thm" role="group" aria-label="Giao diện"><button id="thl" title="Giao diện sáng">☀️<span>Sáng</span></button><button id="thd" title="Giao diện tối">🌙<span>Tối</span></button></div></div></header>
+<header class="top"><div class="in">
+ <a class="brand-lock" href="/" aria-label="Timesheet - trang chủ"><div class="mh" role="img" aria-label="Logo Mạnh Hưng"></div><b class="brandname">Timesheet</b></a>
+ <span class="brand-divider" aria-hidden="true"></span>
+ <nav class="app-nav" id="appNav" aria-label="Điều hướng chính" hidden>
+  <button id="tm" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16"/></svg> Lịch cá nhân</button>
+  <button id="tt" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5A5.5 5.5 0 0 1 9 13h1M16 11a3 3 0 1 0-1-5.8M14 14h1a5.5 5.5 0 0 1 5.5 5.5V20"/></svg> Lịch đội nhóm</button>
+  <button id="tp" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5v5h5M8 12h8M8 16h8"/></svg> Bài viết</button>
+ </nav>
+ <span class="sp"></span>
+ <div class="app-header-actions"><button id="rd" class="header-quiet" type="button" title="Cập nhật sau" hidden>🗺️</button><button id="hp" class="header-quiet" type="button" title="Hướng dẫn" hidden>📖</button><button id="bell" class="bell" title="Thông báo" aria-label="Thông báo" hidden>🔔<i id="bdg" hidden></i></button><button id="who" type="button" title="Hồ sơ cá nhân" aria-label="Hồ sơ cá nhân"></button><button id="out" hidden>Đăng xuất</button><div class="seg thm" role="group" aria-label="Giao diện"><button id="thl" title="Giao diện sáng">☀️<span>Sáng</span></button><button id="thd" title="Giao diện tối">🌙<span>Tối</span></button></div></div>
+ </div></header>
 <main>
 <div id="app"></div>
 <div id="msg" role="status"></div>
