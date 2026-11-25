@@ -1,6 +1,6 @@
+
 -- Team weekly timesheet submissions, approval locks, and audit history.
 -- Forward-only: do not drop this schema after any time or approval history has been recorded.
-begin;
 
 alter table public.work_logs
   add column if not exists team_id uuid,
