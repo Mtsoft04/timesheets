@@ -431,7 +431,7 @@ body:has(.shell) .top .in{max-width:1760px}
 body:has(.shell) .foot{display:none}
 
 .personal-layout{gap:12px;align-items:stretch}
-.split4.personal-layout{grid-template-columns:minmax(310px,340px) minmax(520px,1fr) minmax(248px,270px) minmax(220px,240px)}
+.split4.personal-layout{grid-template-columns:minmax(285px,320px) minmax(390px,1fr) minmax(220px,250px) minmax(400px,440px)}
 .personal-layout>.card,.personal-layout>.rcol{min-width:0}
 .personal-sidebar{gap:12px;padding:0 14px 14px;background:var(--card);border-radius:18px}
 .personal-hero{display:flex;align-items:center;gap:14px;min-height:90px;margin:0 -14px;padding:16px 18px;border-radius:18px 18px 22px 8px;background:linear-gradient(115deg,var(--ac),color-mix(in srgb,var(--ac) 68%,#62c4ff));color:#fff}
@@ -471,7 +471,7 @@ body:has(.shell) .foot{display:none}
 .personal-calendar th{padding:6px 3px}
 .personal-calendar td.c{font-size:11px}
 .personal-insights,.personal-task-column{gap:12px}
-.personal-layout .rcol>.card{border-radius:18px;padding:14px}
+.personal-layout .rcol>.card,.personal-right-layout .card{border-radius:18px;padding:14px}
 .personal-insights .sumc{flex:1.08 1 0;overflow:auto}
 .personal-insights .notes{flex:.92 1 0;overflow:auto}
 .personal-insights .sumc h2,.personal-insights .notes h2,.personal-task-column h2{font-size:15px}
@@ -479,13 +479,15 @@ body:has(.shell) .foot{display:none}
 .personal-insights .mini{width:54px;height:7px}
 .personal-insights .nl{gap:5px}
 .personal-insights .ni{padding:7px 8px;border-radius:11px}
-.personal-task-column>.card{flex:1;overflow:auto}
+.personal-right-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;min-height:0}
+.personal-work-column{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0}
+.personal-task-column{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0}
+.personal-task-column>.card{flex:1;min-height:0;overflow:auto}
 .personal-task-column .tkf{gap:7px}
 .personal-task-column .tkf input,.personal-task-column .tkf select{min-height:38px;border-radius:11px}
 .personal-task-column .tkf>button{min-height:40px;border-radius:12px}
 .personal-layout .wrap table{border-radius:10px}
-.personal-task-column>.time-tracker-card{flex:1.2 1 0;overflow:auto;padding:14px}
-.personal-task-column>#xtkc{flex:.8 1 0}
+.personal-work-column>.time-tracker-card,.personal-work-column>.time-off-card{flex:1 1 50%;min-height:0;overflow:auto;margin:0}
 .time-tracker-card h2{font-size:15px}
 .wl-start-form{display:grid;gap:7px}
 .wl-start-form input,.wl-start-form textarea{width:100%;min-height:38px;padding:8px 10px;border-radius:10px;font-size:12px}
@@ -549,7 +551,7 @@ body:has(.shell) .foot{display:none}
 #attendance-video{width:100%;max-height:55vh;border-radius:12px;background:#111}
 .to-actions{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;margin-top:8px}
 .to-actions input{min-width:0;padding:7px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx)}
-@media (max-width:900px){.personal-task-column>.time-tracker-card{min-height:300px;flex:none}.personal-task-column>#xtkc{min-height:300px;flex:none}}
+@media (min-width:901px) and (max-width:1350px){.personal-right-layout{min-height:420px}.personal-work-column>.time-tracker-card,.personal-work-column>.time-off-card{min-height:0}}
 .wla-panel{display:grid;gap:12px}
 .wla-panel>.f{max-width:260px}
 .wla-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:2px 0 8px;font-weight:700}
@@ -660,6 +662,9 @@ body:has(.shell) .foot{display:none}
  .personal-calendar .legend{width:100%}
  .personal-calendar .wrap{height:68vh;min-height:460px}
  .personal-insights,.personal-task-column{min-height:360px}
+ .personal-right-layout{grid-template-columns:1fr;min-height:0}
+ .personal-work-column>.time-tracker-card,.personal-work-column>.time-off-card{flex:none;min-height:0;overflow:visible}
+ .personal-task-column>.card{flex:none;overflow:visible}
 }
 /* Help center: clear, responsive sections */
 .guide-modal{padding:20px;align-items:flex-start}

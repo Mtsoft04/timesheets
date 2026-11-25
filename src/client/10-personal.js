@@ -58,7 +58,7 @@ function drawMe(){
    </aside>
    <section class="card pane personal-calendar"><div class="ptop">${navBar()}<span class="sp"></span>${legend()}</div>${grid(k=>ctx.cell(k))}</section>
    <div class="rcol personal-insights">${sumCard()}${noteCard()}</div>
-   <div class="rcol personal-task-column">${timeLogCard()}${timeOffCard()}${taskCard()}</div>
+   <div class="rcol personal-right-layout"><div class="personal-work-column">${timeLogCard()}${timeOffCard()}</div><div class="personal-task-column">${taskCard()}</div></div>
   </div>`;
   const w=document.querySelector(".wrap");if(w)w.scrollTop=st;
   bindNav();bindNotes();bindQuick();bindTasks();bindWorkLogs();bindTimeOff();bindCalendarSync();
