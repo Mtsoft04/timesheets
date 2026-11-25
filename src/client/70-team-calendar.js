@@ -43,11 +43,12 @@ function navBtns(){
   const n=cal.tid===(team&&team.id)?cal.ev.length:0;
   return `<button id="vc" class="mem-btn ${tview==="cal"?"on":""}"><span>📅 Lịch chung · sự kiện</span><small>${tview==="cal"?n+" trong tuần":"lời mời, công việc"}</small></button>
    <button id="vr" class="mem-btn ${tview==="room"?"on":""}"><span>🏢 Phòng &amp; tài nguyên</span><small>đặt chỗ</small></button>
-   ${isAdminT()?`<button id="vl">🔗 Liên kết chia sẻ sống</button><button id="wla" class="mem-btn"><span>🧾 Duyệt giờ công</span><small>Theo tuần thành viên nộp</small></button>`:""}`;}
+   <button id="shift-board" class="mem-btn"><span>🕒 Ca làm &amp; đổi ca</span><small>Đăng nhượng ca và gửi xin nhận</small></button>
+   ${isAdminT()?`<button id="vl">🔗 Liên kết chia sẻ sống</button><button id="wla" class="mem-btn"><span>🧾 Duyệt giờ công</span><small>Theo tuần thành viên nộp</small></button><button id="to-approve" class="mem-btn"><span>🌿 Nghỉ phép &amp; tăng ca</span><small>Yêu cầu chờ trưởng nhóm duyệt</small></button>`:""}`;}
 function bindNavBtns(){
   $("vc").onclick=()=>setTview("cal");$("vr").onclick=()=>setTview("room");
   const vl=$("vl");if(vl)vl.onclick=()=>openLiveShares("team");
-  const wla=$("wla");if(wla)wla.onclick=openTimesheetApprovals;}
+  const wla=$("wla");if(wla)wla.onclick=openTimesheetApprovals;const toa=$("to-approve");if(toa)toa.onclick=openTimeOffApprovals;const shift=$("shift-board");if(shift)shift.onclick=openShiftBoard;}
 function paneHtml(){
   if(tview==="vote")return votePane();
   if(tview==="cal")return calPane();
@@ -74,11 +75,14 @@ function calPane(){
   return `<div class="ptop">${navBar()}</div><div class="agenda" id="agd">${cols}</div>`;}
 function tkMini(t){return `<div class="tkm ${t.done?"done":""}">${t.done?"✅":"⬜"} ${t.due_hour!=null?"<b>"+t.due_hour+":00</b> ":""}${esc(t.title)}${t.assignee_name?` <span class="mut">· ${esc(t.assignee_name)}</span>`:""}</div>`;}
 const RSV=[["accepted","✓ Tham gia"],["maybe","? Có thể"],["declined","✗ Từ chối"]];
+const safeMeetingUrl=value=>{try{const u=new URL(String(value||""));return u.protocol==="https:"?u.href:null;}catch{return null;}};
 function evHtml(e){
   const inv=cal.inv.filter(i=>i.event_id===e.id),my=inv.find(i=>i.user_id===user.id),room=cal.rooms.find(r=>r.id===e.room_id),c=s=>inv.filter(i=>i.status===s).length;
   const man=e.created_by===user.id||isAdminT();
+  const meetingUrl=safeMeetingUrl(e.location);
   return `<div class="evc ${my?my.status:""}"><b>${esc(e.title)}</b>
    <div class="mut">${e.start_hour}:00–${e.end_hour}:00${room?" · 🏢 "+esc(room.name):e.location?" · 📍 "+esc(e.location):""}</div>
+   ${meetingUrl?`<a class="btn meeting-join" href="${esc(meetingUrl)}" target="_blank" rel="noopener noreferrer">🎥 Vào phòng họp</a>`:""}
    ${e.description?`<div class="ed">${esc(e.description)}</div>`:""}
    <div class="mut" style="font-size:12px">Tạo bởi ${esc(e.created_by_name)} · ✓${c("accepted")} ?${c("maybe")} ✗${c("declined")} …${c("pending")}</div>
    ${my?`<div class="rsvp">${RSV.map(([s,t])=>`<button class="rv ${my.status===s?"on "+s:""}" data-rsvp="${s}" data-e="${e.id}">${t}</button>`).join("")}</div>`:""}
@@ -107,11 +111,13 @@ async function delEvent(id){
   say("✓ Đã xóa sự kiện");await loadCal();drawTeam();}
 function evDetail(id){
   const e=cal.ev.find(x=>x.id===id);if(!e)return;
+  const meetingUrl=safeMeetingUrl(e.location);
   const inv=cal.inv.filter(i=>i.event_id===id),room=cal.rooms.find(r=>r.id===e.room_id);
   const ST={accepted:["✓ Tham gia","ok"],maybe:["? Có thể",""],declined:["✗ Từ chối",""],pending:["… Chưa trả lời",""]};
   const ord={accepted:0,maybe:1,pending:2,declined:3};
   openGm("📅 "+e.title,`<div class="xdet"><div class="mut">${dowOf(e.event_date)} ${dm(parse(e.event_date))}/${parse(e.event_date).getFullYear()} · ${e.start_hour}:00–${e.end_hour}:00${room?" · 🏢 "+esc(room.name):""}${e.location?" · 📍 "+esc(e.location):""}</div>
    ${e.description?`<p style="white-space:pre-wrap;margin:8px 0">${esc(e.description)}</p>`:""}
+   ${meetingUrl?`<p><a class="btn" href="${esc(meetingUrl)}" target="_blank" rel="noopener noreferrer">🎥 Tham gia cuộc họp</a></p>`:""}
    <div class="mut" style="margin:6px 0">Tạo bởi ${esc(e.created_by_name)} · ${inv.length} người được mời</div>
    <div class="mlist">${inv.sort((a,b)=>ord[a.status]-ord[b.status]||(a.user_name||"").localeCompare(b.user_name||"","vi")).map(i=>`<div class="mrow"><span class="av">${ini(i.user_name)}</span><span class="mn">${esc(i.user_name)}${i.user_id===user.id?" <small class='mut'>(Bạn)</small>":""}${i.note?`<div class="mut" style="font-size:12px;white-space:normal">“${esc(i.note)}”</div>`:""}</span><span class="chip ${ST[i.status][1]}">${ST[i.status][0]}</span></div>`).join("")||"<div class='mut'>Chưa có ai được mời.</div>"}</div>
    <div class="row" style="margin-top:12px"><button id="xics">⬇ Xuất .ics</button></div></div>`);
@@ -133,7 +139,7 @@ function openEventForm(e,pre){
    <label class="f">Tên sự kiện<input id="xet" maxlength="120" value="${esc(t0)}" placeholder="VD: Họp tuần"></label>
    <div class="row"><label class="f sp">Ngày<input type="date" id="xed" value="${d0}"></label><label class="f">Bắt đầu<select id="xes" class="xs">${hrOpts(0,23,s0)}</select></label><label class="f">Kết thúc<select id="xee" class="xs">${hrOpts(1,24,e0)}</select></label></div>
    <label class="f">Phòng / tài nguyên<select id="xer" class="xs"><option value="">Không đặt phòng</option>${rooms.map(r=>`<option value="${r.id}" ${e&&e.room_id===r.id?"selected":""}>${r.kind==="equipment"?"🔧":"🏢"} ${esc(r.name)}${r.capacity?" ("+r.capacity+" chỗ)":""}</option>`).join("")}</select></label>
-   <label class="f">Địa điểm khác (nếu không đặt phòng)<input id="xel" maxlength="120" value="${esc(e?e.location:"")}" placeholder="VD: Quán cà phê / link Meet"></label>
+   <label class="f">Địa điểm hoặc link họp<input id="xel" maxlength="120" value="${esc(e?e.location:"")}" placeholder="VD: Phòng 2 hoặc https://meet.google.com/…"></label>
    <label class="f">Mô tả<textarea id="xedes" maxlength="1000">${esc(e?e.description:"")}</textarea></label>
    <div><b style="font-size:13px">Mời ai?</b> <button class="pa" type="button" id="xall">Chọn tất cả</button> <button class="pa" type="button" id="xnone">Bỏ chọn</button>
     <div class="xinvl">${members.map(m=>`<label><input type="checkbox" class="xinv" value="${m.user_id}" ${(!inv||inv.has(m.user_id)||m.user_id===user.id)?"checked":""} ${m.user_id===(e?e.created_by:user.id)?"disabled":""}>${esc(m.name)}${m.user_id===user.id?" (Bạn)":""}</label>`).join("")}</div></div>

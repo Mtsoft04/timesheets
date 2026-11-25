@@ -8,7 +8,7 @@ Client code được tách theo chức năng trong `src/client/` và ghép có t
 
 Edge Function Deno gửi push nhắc lịch vẫn nằm tại `supabase/functions/send-reminders/index.ts`, do cron hiện tại gọi hàm này.
 
-Để bật theo dõi giờ làm và phê duyệt kỳ công, chạy lần lượt `supabase/migrations/20261125_create_work_logs.sql` rồi `supabase/migrations/20261125_work_log_approvals.sql` trong Supabase → SQL Editor. RLS giữ bản ghi giờ làm riêng tư cho tới khi thành viên nộp kỳ; sau đó trưởng nhóm/quản trị viên mới xem và duyệt được.
+Để bật theo dõi giờ làm, duyệt kỳ công, tính phí, nghỉ phép/tăng ca, đổi ca và QR chấm công, chạy file gộp `supabase/SQL_EDITOR_ALL.sql` một lần trong Supabase → SQL Editor; file đã bao gồm các migration theo đúng thứ tự phụ thuộc. Nếu chạy riêng, thứ tự là `20261125_create_work_logs.sql`, `20261125_work_log_approvals.sql`, `20261125_work_log_billing.sql`, `20261125_time_off_requests.sql`, `20261125_team_shifts.sql`, rồi `20261125_qr_attendance.sql`. RLS giữ dữ liệu riêng tư; trưởng nhóm/quản trị viên duyệt kỳ công, yêu cầu nghỉ/tăng ca, đổi ca và chấm công. Yêu cầu nghỉ/tăng ca được chiếu thành giờ bận sau khi duyệt. QR check-in/out hết hạn theo thời gian cấu hình; thiết bị cần trình duyệt hỗ trợ camera/BarcodeDetector hoặc có thể nhập token QR. Đồng bộ lịch hiện hỗ trợ nhập/xuất tệp .ics thủ công; kết nối tự động Google/Outlook cần OAuth và cấu hình ứng dụng tương ứng.
 
 1. Cài Node.js 20 trở lên.
 2. Chạy `npm install`.

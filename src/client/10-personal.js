@@ -4,7 +4,7 @@ async function meView(){
   const[a,b]=wkRange();
   const{data,error}=await SB.from("personal_slots").select("*").gte("slot_date",a).lte("slot_date",b);
   if(error){say("Lỗi tải: "+error.message);return;}
-  mine=new Map((data||[]).map(r=>[K(r.slot_date,r.hour),r.note||""]));sel=new Set();pdirty=false;await Promise.all([loadMyTasks(),loadWorkLogs()]);drawMe();
+  mine=new Map((data||[]).map(r=>[K(r.slot_date,r.hour),r.note||""]));sel=new Set();pdirty=false;await Promise.all([loadMyTasks(),loadWorkLogs(),loadTimeOff()]);drawMe();
 }
 const NC=8,hue=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;return 1+h%NC};
 const QN=["🎯 Focus Time","🧱 Time Block","Đi làm","Đi học","Họp","Việc riêng","Nghỉ ngơi"];
@@ -54,21 +54,22 @@ function drawMe(){
     <div class="personal-hero"><span class="personal-hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></span><div><h1>Lịch cá nhân</h1><p>Quản lý lịch làm việc, sự kiện của bạn</p></div></div>
     <div class="personal-mode">${noteSide()}</div>${quickPanel()}
     <div class="personal-primary-actions"><button class="p" id="sv">Lưu lịch cá nhân</button><button id="ap" title="Sao chép lịch cá nhân sang nhóm bạn chọn">⤴ Áp dụng lịch cá nhân vào nhóm</button></div>
-    <div class="tools personal-tools"><button id="rp">🔁 Lặp lại</button><button id="an">📊 Phân tích</button><button id="rm">🔔 Nhắc lịch</button><button id="sh">🔗 Chia sẻ</button></div>
+    <div class="tools personal-tools"><button id="rp">🔁 Lặp lại</button><button id="an">📊 Phân tích</button><button id="rm">🔔 Nhắc lịch</button><button id="sh">🔗 Chia sẻ</button></div>${calendarSyncTools()}
    </aside>
    <section class="card pane personal-calendar"><div class="ptop">${navBar()}<span class="sp"></span>${legend()}</div>${grid(k=>ctx.cell(k))}</section>
    <div class="rcol personal-insights">${sumCard()}${noteCard()}</div>
-   <div class="rcol personal-task-column">${timeLogCard()}${taskCard()}</div>
+   <div class="rcol personal-task-column">${timeLogCard()}${timeOffCard()}${taskCard()}</div>
   </div>`;
   const w=document.querySelector(".wrap");if(w)w.scrollTop=st;
-  bindNav();bindNotes();bindQuick();bindTasks();bindWorkLogs();
+  bindNav();bindNotes();bindQuick();bindTasks();bindWorkLogs();bindTimeOff();bindCalendarSync();
   $("sv").onclick=()=>saveMe(false);$("ap").onclick=openApply;$("rp").onclick=openRepeat;$("an").onclick=openAnalytics;$("rm").onclick=openRemind;$("sh").onclick=openShare;
 }
 ctx={cell:()=>({cls:""})};
 function cellOf(k){const m=store(),sl=sel.has(k)?" sel":"";
-  if(!m.has(k))return{cls:sl.trim()};
+  const off=view==="team"?teamTimeOffCell(k):personalTimeOffCell(k);
+  if(!m.has(k))return off?{...off,cls:off.cls+sl}:{cls:sl.trim()};
   const n=m.get(k),[d,h]=k.split("|"),first=!(+h>0&&n&&m.get(K(d,+h-1))===n);
-  return{cls:"busy"+sl+(n?" n"+hue(n):""),txt:n&&first?n:"",tip:n};}
+  return{cls:"busy"+sl+(n?" n"+hue(n):"")+(off?" timeoff":""),txt:n&&first?n:off?.txt||"",tip:[n,off?.tip].filter(Boolean).join("\n")};}
 function mkCtx(){return{cell:cellOf,
   start:k=>pmode==="paint"?!store().has(k):!sel.has(k),
   apply:(k,v)=>{const m=store();

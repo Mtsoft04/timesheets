@@ -52,18 +52,18 @@ const freeCard=()=>`<aside class="card side notes"><h2>🟢 Khung giờ rảnh c
 async function loadTeam(reset){
   if(!team)return;
   const[a,b]=wkRange();
-  const[m,z]=await Promise.all([SB.from("team_members").select("*").eq("team_id",team.id),SB.from("team_busy").select("*").eq("team_id",team.id).gte("slot_date",a).lte("slot_date",b)]);
+  const[m,z,tr]=await Promise.all([SB.from("team_members").select("*").eq("team_id",team.id),SB.from("team_busy").select("*").eq("team_id",team.id).gte("slot_date",a).lte("slot_date",b),SB.rpc("approved_time_off_for_team",{p_team:team.id,p_from:new Date(weekStart).toISOString(),p_to:new Date(addD(weekStart,7)).toISOString()})]);
   if(m.error||z.error)return say("Lỗi tải: "+(m.error||z.error).message);
-  members=m.data||[];busy=z.data||[];
+  members=m.data||[];busy=z.data||[];teamTimeOffSlots=tr.error?[]:timeOffSlotRows(tr.data||[],a,fmt(addD(weekStart,7)));
   if(!members.some(x=>x.user_id===user.id)){team=null;chatTeam=null;dirty=false;sel=new Set();say("Nhóm đã bị xoá hoặc bạn không còn trong nhóm này.");if(view==="team")teamView();return;}await loadPolls();await autoClosePolls();if(CAL_VIEWS.includes(tview))await loadCal();if(chatTeam!==team.id){chatTeam=team.id;chatMsgs=[];await loadChat();}
   if(reset){dirty=false;sel=new Set();}
   if(reset||!dirty)tmine=new Map(busy.filter(x=>x.user_id===user.id).map(x=>[K(x.slot_date,x.hour),x.note||""]));
   if(reset||view==="team")drawTeam();
 }
 const me=()=>members.find(m=>m.user_id===user.id)||{};
-function noteOf(id,k){if(id===user.id)return tmine.get(k)||"";const[d,h]=k.split("|");return(busy.find(x=>x.user_id===id&&x.slot_date===d&&x.hour==h)||{}).note||"";}
+function noteOf(id,k){const[d,h]=k.split("|");const off=teamTimeOffSlots.find(x=>x.user_id===id&&x.slot_date===d&&x.hour==h);if(off)return off.note;if(id===user.id)return tmine.get(k)||"";return(busy.find(x=>x.user_id===id&&x.slot_date===d&&x.hour==h)||{}).note||"";}
 function openMembers(){$("mq").value="";renderMembers();$("mem").hidden=false;}
-function busyOf(k){const[d,h]=k.split("|");const ids=new Set(busy.filter(x=>x.slot_date===d&&x.hour==h&&x.user_id!==user.id).map(x=>x.user_id));if(tmine.has(k))ids.add(user.id);return[...ids];}
+function busyOf(k){const[d,h]=k.split("|");const ids=new Set(busy.filter(x=>x.slot_date===d&&x.hour==h&&x.user_id!==user.id).map(x=>x.user_id));for(const x of teamTimeOffSlots)if(x.slot_date===d&&x.hour==h)ids.add(x.user_id);if(tmine.has(k))ids.add(user.id);return[...ids];}
 let revId=null;
 function openReview(id){const p=polls.find(x=>x.id===id);if(!p)return;revId=id;$("prh").textContent=p.title;$("prb").innerHTML=reviewHtml(p);$("prm").hidden=false;}
 function addOpt(v){const d=document.createElement("div");d.className="row";

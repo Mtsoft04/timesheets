@@ -62,8 +62,8 @@ async function openChat(c){
   ppl.chat=c;ppl.msgs=[];ppl.err=null;paintPeople();$("pcl").innerHTML="<div class='mut' style='padding:8px'>Đang tải…</div>";
   const rows=await fetchChat();if(ppl.chat!==c)return;
   if(rows===null){$("pcl").innerHTML=`<div class="mut" style="padding:8px">⚠️ ${esc(dbErr({message:ppl.err}))}</div>`;return;}
-  ppl.msgs=rows;renderMsgs(true);if(c.kind==="dm")markRead();if($("pci"))$("pci").focus();}
-async function markRead(){const c=ppl.chat;if(!c||c.kind!=="dm")return;
+  ppl.msgs=rows;renderMsgs(true);if(c.kind==="dm")markDirectChatRead();if($("pci"))$("pci").focus();}
+async function markDirectChatRead(){const c=ppl.chat;if(!c||c.kind!=="dm")return;
   delete ppl.unread[c.id];paintBadge();
   await SB.from("direct_messages").update({read_at:new Date().toISOString()}).eq("recipient",user.id).eq("sender",c.id).is("read_at",null);}
 async function pollChatP(){
@@ -71,7 +71,7 @@ async function pollChatP(){
   const rows=await fetchChat(last);if(!rows||ppl.chat!==c)return;
   const seen=new Set(ppl.msgs.map(m=>m.id)),add=rows.filter(m=>!seen.has(m.id));if(!add.length)return;
   ppl.msgs=ppl.msgs.concat(add).slice(-300);renderMsgs();
-  if(c.kind==="dm"&&add.some(m=>m.uid!==user.id))markRead();}
+  if(c.kind==="dm"&&add.some(m=>m.uid!==user.id))markDirectChatRead();}
 function renderMsgs(stick){const el=$("pcl");if(!el)return;const c=ppl.chat,near=el.scrollHeight-el.scrollTop-el.clientHeight<60;
   let day="",h="";
   ppl.msgs.forEach(m=>{const d=new Date(m.at),dl=dayLabel(d),mine=m.uid===user.id;

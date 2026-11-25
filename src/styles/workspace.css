@@ -500,6 +500,7 @@ body:has(.shell) .foot{display:none}
 .wl-actions button{width:100%;min-height:34px;padding:6px 8px;border-radius:10px;font-size:11px}
 .wl-summary{margin:9px 0 5px;padding:7px 9px;border-radius:10px;background:var(--head);font-size:11px}
 .wl-summary b{float:right;color:var(--ac);font-variant-numeric:tabular-nums}
+.wl-summary+.mut{margin:4px 10px 8px}
 .wl-list{display:flex;flex-direction:column;gap:5px}
 .wl-item{padding:7px 8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);font-size:11px;overflow-wrap:anywhere}
 .wl-item .mut{font-size:10px;line-height:1.4}
@@ -522,11 +523,38 @@ body:has(.shell) .foot{display:none}
 .wl-form input,.wl-form textarea{width:100%}
 .wl-form .row{align-items:flex-start}
 .wl-form .f{min-width:0}
+.wl-billing{display:flex;align-items:center;gap:8px;margin:4px 0;font-weight:600}
+.wl-billing input{width:auto;accent-color:#1764f5}
+.c.timeoff{box-shadow:inset 0 0 0 2px #7c3aed;font-size:9px;font-weight:700}
+.time-off-card .to-list{display:grid;gap:6px;margin-top:8px}
+.to-item{display:grid;gap:4px;padding:8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);font-size:11px}
+.to-item>div{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.to-item small{color:var(--mut);overflow-wrap:anywhere}
+.to-item button{justify-self:end;padding:4px 8px;border-radius:8px;font-size:10px}
+.time-off-card>[data-to-new]{width:100%;min-height:36px}
+.calendar-sync{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;padding:9px;border:1px solid var(--bd);border-radius:12px;background:var(--bg)}
+.calendar-sync h3,.calendar-sync p{grid-column:1/-1;margin:0}
+.calendar-sync h3{font-size:12px}
+.calendar-sync p{font-size:10px;line-height:1.4}
+.calendar-sync button{padding:6px 4px;border-radius:9px;font-size:10px}
+.calendar-sync{grid-column:1/-1}
+.meeting-join{display:inline-flex;margin:4px 0;padding:5px 9px;font-size:11px}
+.shift-board{display:grid;gap:10px}
+.shift-card{display:grid;gap:7px;margin:7px 0;padding:11px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);font-size:12px}
+.shift-card header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.shift-card header .mut{margin-top:4px}
+.shift-card button{justify-self:start;padding:6px 9px;border-radius:9px;font-size:11px}
+.attendance-qr{display:grid;justify-items:center;gap:8px;margin:12px auto;padding:14px;width:min(100%,320px);border-radius:14px;background:white;color:#0b1736;text-align:center}
+.attendance-qr svg{width:min(100%,260px);height:auto;image-rendering:pixelated}
+#attendance-video{width:100%;max-height:55vh;border-radius:12px;background:#111}
+.to-actions{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;margin-top:8px}
+.to-actions input{min-width:0;padding:7px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx)}
 @media (max-width:900px){.personal-task-column>.time-tracker-card{min-height:300px;flex:none}.personal-task-column>#xtkc{min-height:300px;flex:none}}
 .wla-panel{display:grid;gap:12px}
 .wla-panel>.f{max-width:260px}
 .wla-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:2px 0 8px;font-weight:700}
 .wla-head .mut{font-size:11px;font-weight:400}
+.wla-head small{display:block;margin-top:5px}
 .wla-empty{padding:16px;text-align:center;border:1px dashed var(--bd);border-radius:12px}
 .wla-card{margin:8px 0;padding:12px;border:1px solid var(--bd);border-radius:14px;background:var(--bg)}
 .wla-card>header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
