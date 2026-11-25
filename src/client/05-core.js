@@ -64,7 +64,7 @@ document.addEventListener("pointerup",()=>{drag=null});
 
 /* ---------- đăng nhập ---------- */
 function authView(){
-  $("appNav").hidden=true;$("rd").hidden=true;$("hp").hidden=true;
+  $("appNav").hidden=true;$("hp").hidden=true;
   $("app").innerHTML=`<div class="auth"><div class="brand"><div class="logo" style="background:rgba(255,255,255,.18)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18M8 14h3"/></svg></div><h2>Tìm giờ cả nhóm cùng rảnh</h2><p>Mỗi người tô giờ bận của mình, Timesheet tự tìm các khung giờ trùng cho cả nhóm.</p><ul><li>Lịch cá nhân kèm ghi chú</li><li>Tạo nhóm và mời bằng mã chia sẻ</li><li>Chốt lịch và xem kết quả chung</li></ul></div>
   <div class="card form"><h2>Chào mừng bạn</h2>
   <div class="col">
@@ -85,7 +85,7 @@ function authView(){
 
 /* ---------- khung chính ---------- */
 function shell(){
-  $("appNav").hidden=false;$("rd").hidden=false;$("hp").hidden=false;
+  $("appNav").hidden=false;$("hp").hidden=false;
   $("app").innerHTML=`<div class="shell"><div id="body"></div></div>
   <div class="modal" id="help" hidden><div class="card"><div class="row"><h2 style="margin:0">📖 Hướng dẫn &amp; lưu ý</h2><span class="sp"></span><button id="hx">Đóng</button></div><ul>
   <li><b>Ô xanh dương = giờ BẬN</b>, ô trống = giờ rảnh. Bấm hoặc kéo để tô.</li>
@@ -102,7 +102,7 @@ function shell(){
   <li><b>Kết quả chung của nhóm</b>: ô hiển thị dạng <b>số người khả dụng/tổng</b>; bấm một ô để xem tên người khả dụng và người bận. Thẻ <b>📅 Gợi ý lịch họp</b> tự tìm khung giờ cả nhóm cùng rảnh, cho <b>xuất .ics</b> (Google/Apple/Outlook), mở Google Lịch hoặc <b>🔔 báo vào chat nhóm</b>. Nhóm trưởng có thể bật tự động báo khi cả nhóm đã chốt.</li>
   <li><b>📰 Bài viết</b>: bấm các nút <b>#chủ đề</b> khi soạn bài, dùng thanh <b>Lọc</b> để xem theo chủ đề. Nút <b>🔑 Chèn mã nhóm</b> / <b>📞 Chèn SĐT</b> giúp đăng nhanh; bài có mã nhóm hoặc số điện thoại sẽ hiện nút <b>📋 Sao chép mã</b> / <b>📞 Gọi</b>.</li>
   <li><b>🔁 Lặp lại</b>: sao chép giờ bận tuần này sang 1–12 tuần sau, hoặc chép mẫu một ngày sang các ngày khác. <b>🎯 Focus Time / 🧱 Time Block</b>: chọn loại ghi chú ở mục Chọn nhanh khi tô. <b>📊 Phân tích</b>, <b>🔔 Nhắc lịch</b> (khi đang mở trang) và <b>🔗 Chia sẻ</b> (liên kết chỉ xem, không cần đăng nhập) nằm ở cột trái lịch cá nhân.</li>
-  <li><b>Gợi ý lịch họp</b> cảnh báo ⚠️ khi trùng lịch cá nhân hoặc nhóm khác của bạn, và <b>bình chọn tự động chốt</b> khi cả nhóm đã bỏ phiếu (nhóm trưởng tạo bình chọn cần đang mở trang). Xem mục <b>🗺️ Cập nhật sau</b> cho các tính năng chưa có.</li>
+  <li><b>Gợi ý lịch họp</b> cảnh báo ⚠️ khi trùng lịch cá nhân hoặc nhóm khác của bạn, và <b>bình chọn tự động chốt</b> khi cả nhóm đã bỏ phiếu (nhóm trưởng tạo bình chọn cần đang mở trang).</li>
   <li><b>📅 Lịch chung · sự kiện</b> (trong nhóm): tạo sự kiện, mời thành viên, mỗi người bấm <b>Tham gia / Có thể / Từ chối</b>. Chọn phòng thì hệ thống tự đặt chỗ và chặn trùng. Từ <b>Gợi ý lịch họp</b> bấm <b>📅 Tạo sự kiện</b> để chốt luôn. <b>✅ Công việc</b> gắn ngày/giờ, giao cho thành viên, tick hoàn thành (cũng có ở lịch cá nhân).</li>
   <li><b>🏢 Phòng &amp; tài nguyên</b>: quản trị thêm phòng/thiết bị; mọi người kéo trên lịch để chọn giờ rồi <b>Đặt chỗ</b>. <b>Vai trò</b> (Quản trị / Thành viên / Chỉ xem) đổi trong danh sách <b>Thành viên</b>.</li>
   <li><b>🔗 Liên kết sống</b>: lịch cá nhân hoặc lịch nhóm tự cập nhật, đặt hạn dùng, thu hồi bất cứ lúc nào. <b>🗳️ Bình chọn</b> có thêm hạn chót, ẩn danh, giới hạn số phương án. <b>🔔 Nhắc lịch</b> có thêm thông báo nền khi đã đóng trang.</li>
@@ -133,7 +133,7 @@ function shell(){
   $("lbp").onclick=()=>{lb.i=(lb.i+lb.l.length-1)%lb.l.length;showLb()};$("lbn").onclick=()=>{lb.i=(lb.i+1)%lb.l.length;showLb()};
   $("apx").onclick=()=>{$("apm").hidden=true};$("apm").onclick=e=>{if(e.target.id==="apm")e.target.hidden=true};
   $("prx").onclick=()=>{$("prm").hidden=true};
-  $("gx").onclick=()=>{$("gm").hidden=true};$("gm").onclick=e=>{if(e.target.id==="gm")e.target.hidden=true};$("rd").onclick=openRoadmap;$("prm").onclick=e=>{if(e.target.id==="prm")e.target.hidden=true};
+  $("gx").onclick=()=>{$("gm").hidden=true};$("gm").onclick=e=>{if(e.target.id==="gm")e.target.hidden=true};$("prm").onclick=e=>{if(e.target.id==="prm")e.target.hidden=true};
   $("prb").onclick=async ev=>{const a=ev.target.closest("[data-a]");if(a&&await pollAction(revId,a.dataset.a))$("prm").hidden=true};
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")["help","mem","pcm","prm","apm","lb","npn","gm"].forEach(i=>{const h=$(i);if(h)h.hidden=true})});

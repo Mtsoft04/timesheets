@@ -4,7 +4,7 @@ async function meView(){
   const[a,b]=wkRange();
   const{data,error}=await SB.from("personal_slots").select("*").gte("slot_date",a).lte("slot_date",b);
   if(error){say("Lỗi tải: "+error.message);return;}
-  mine=new Map((data||[]).map(r=>[K(r.slot_date,r.hour),r.note||""]));sel=new Set();pdirty=false;await loadMyTasks();drawMe();
+  mine=new Map((data||[]).map(r=>[K(r.slot_date,r.hour),r.note||""]));sel=new Set();pdirty=false;await Promise.all([loadMyTasks(),loadWorkLogs()]);drawMe();
 }
 const NC=8,hue=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;return 1+h%NC};
 const QN=["🎯 Focus Time","🧱 Time Block","Đi làm","Đi học","Họp","Việc riêng","Nghỉ ngơi"];
@@ -58,10 +58,10 @@ function drawMe(){
    </aside>
    <section class="card pane personal-calendar"><div class="ptop">${navBar()}<span class="sp"></span>${legend()}</div>${grid(k=>ctx.cell(k))}</section>
    <div class="rcol personal-insights">${sumCard()}${noteCard()}</div>
-   <div class="rcol personal-task-column">${taskCard()}</div>
+   <div class="rcol personal-task-column">${timeLogCard()}${taskCard()}</div>
   </div>`;
   const w=document.querySelector(".wrap");if(w)w.scrollTop=st;
-  bindNav();bindNotes();bindQuick();bindTasks();
+  bindNav();bindNotes();bindQuick();bindTasks();bindWorkLogs();
   $("sv").onclick=()=>saveMe(false);$("ap").onclick=openApply;$("rp").onclick=openRepeat;$("an").onclick=openAnalytics;$("rm").onclick=openRemind;$("sh").onclick=openShare;
 }
 ctx={cell:()=>({cls:""})};

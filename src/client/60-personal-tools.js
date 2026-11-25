@@ -117,15 +117,3 @@ function shareView(){
 }
 
 /* --- tự động đóng bình chọn khi mọi người đã bỏ phiếu --- */
-/* --- lộ trình: tính năng cập nhật sau --- */
-function openRoadmap(){
-  openGm("🗺️ Tính năng cập nhật sau",`<div class="rm"><p class="mut">Các mục dưới đây cần máy chủ AI hoặc dịch vụ bên thứ ba nên chưa làm.</p>
-   <h3>✅ Đã có trong bản này</h3><ul>
-    <li>Xác nhận tham gia / từ chối sự kiện, công việc gắn lịch, lịch chung &amp; vai trò, phòng họp chống đặt trùng, liên kết sống, bình chọn nâng cao, nhắc lịch nền (web push). Xem mục <b>📖 Hướng dẫn</b>.</li></ul>
-   <h3>🤖 Cần máy chủ và dịch vụ AI</h3><ul>
-    <li><b>AI gợi ý lịch</b> bằng mô hình ngôn ngữ (hiện đã có gợi ý xếp hạng bằng thuật toán).</li>
-    <li><b>AI tóm tắt cuộc họp và tạo công việc</b>: cần lưu ghi chú/ghi âm và gọi AI qua máy chủ để không lộ khóa API.</li></ul>
-   <h3>🔌 Cần tích hợp bên thứ ba</h3><ul>
-    <li><b>Đồng bộ Google Calendar / Outlook</b>: đăng nhập OAuth và hai chiều (hiện đã có xuất .ics và nút thêm vào Google Lịch).</li>
-    <li><b>API tích hợp bên ngoài</b>: khóa API riêng và webhook (Supabase đã có sẵn API cho dữ liệu của bạn).</li></ul></div>`);
-}

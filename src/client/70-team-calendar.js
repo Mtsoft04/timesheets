@@ -43,10 +43,11 @@ function navBtns(){
   const n=cal.tid===(team&&team.id)?cal.ev.length:0;
   return `<button id="vc" class="mem-btn ${tview==="cal"?"on":""}"><span>📅 Lịch chung · sự kiện</span><small>${tview==="cal"?n+" trong tuần":"lời mời, công việc"}</small></button>
    <button id="vr" class="mem-btn ${tview==="room"?"on":""}"><span>🏢 Phòng &amp; tài nguyên</span><small>đặt chỗ</small></button>
-   ${isAdminT()?`<button id="vl">🔗 Liên kết chia sẻ sống</button>`:""}`;}
+   ${isAdminT()?`<button id="vl">🔗 Liên kết chia sẻ sống</button><button id="wla" class="mem-btn"><span>🧾 Duyệt giờ công</span><small>Theo tuần thành viên nộp</small></button>`:""}`;}
 function bindNavBtns(){
   $("vc").onclick=()=>setTview("cal");$("vr").onclick=()=>setTview("room");
-  const vl=$("vl");if(vl)vl.onclick=()=>openLiveShares("team");}
+  const vl=$("vl");if(vl)vl.onclick=()=>openLiveShares("team");
+  const wla=$("wla");if(wla)wla.onclick=openTimesheetApprovals;}
 function paneHtml(){
   if(tview==="vote")return votePane();
   if(tview==="cal")return calPane();

@@ -8,6 +8,8 @@ Client code được tách theo chức năng trong `src/client/` và ghép có t
 
 Edge Function Deno gửi push nhắc lịch vẫn nằm tại `supabase/functions/send-reminders/index.ts`, do cron hiện tại gọi hàm này.
 
+Để bật theo dõi giờ làm và phê duyệt kỳ công, chạy lần lượt `supabase/migrations/20261125_create_work_logs.sql` rồi `supabase/migrations/20261125_work_log_approvals.sql` trong Supabase → SQL Editor. RLS giữ bản ghi giờ làm riêng tư cho tới khi thành viên nộp kỳ; sau đó trưởng nhóm/quản trị viên mới xem và duyệt được.
+
 1. Cài Node.js 20 trở lên.
 2. Chạy `npm install`.
 3. Điền Supabase URL và publishable key vào `.env`.
