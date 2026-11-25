@@ -7,9 +7,9 @@ async function teamView(){
   team?openTeam(team.id):listTeams();
 }
 function listTeams(){
-  $("body").innerHTML=`<div class="cards3"><div class="card"><h2>Nhóm của tôi</h2><div class="teams">${teams.length?teams.map(t=>`<button data-t="${t.id}">${t.owner===user.id?"👑 ":""}${esc(t.name)}</button>`).join(""):"<span class='mut'>Bạn chưa có nhóm nào.</span>"}</div></div>
-  <div class="card"><h2>Tạo nhóm mới</h2><div class="row"><input id="tn" class="sp" placeholder="Tên nhóm" maxlength="60"><button class="p" id="tc">Tạo nhóm</button></div></div>
-  <div class="card"><h2>Tham gia bằng mã</h2><div class="row"><input id="jc" class="sp" placeholder="Nhập mã chia sẻ" maxlength="10"><button class="p" id="jb">Tham gia</button></div></div></div>`;
+  $("body").innerHTML=`<div class="team-home"><div class="team-hero"><span class="team-hero-icon" aria-hidden="true">👥</span><div><h1>Lịch đội nhóm</h1><p>Phối hợp lịch, sự kiện và công việc cùng nhóm của bạn</p></div></div><div class="cards3 team-home-grid"><div class="card team-home-card"><h2>Nhóm của tôi</h2><div class="teams">${teams.length?teams.map(t=>`<button data-t="${t.id}">${t.owner===user.id?"👑 ":""}${esc(t.name)}</button>`).join(""):"<span class='mut'>Bạn chưa có nhóm nào.</span>"}</div></div>
+  <div class="card team-home-card"><h2>Tạo nhóm mới</h2><div class="row"><input id="tn" class="sp" placeholder="Tên nhóm" maxlength="60"><button class="p" id="tc">Tạo nhóm</button></div></div>
+  <div class="card team-home-card"><h2>Tham gia bằng mã</h2><div class="row"><input id="jc" class="sp" placeholder="Nhập mã chia sẻ" maxlength="10"><button class="p" id="jb">Tham gia</button></div></div></div></div>`;
   document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>openTeam(b.dataset.t));
   $("tc").onclick=async()=>{const n=$("tn").value.trim();if(!n)return say("Hãy nhập tên nhóm.");
     const{data,error}=await SB.rpc("create_team",{p_name:n,p_user_name:uname()});if(error)return say("Lỗi: "+error.message);team=data;teamView();};
@@ -75,7 +75,7 @@ function drawTeam(){
   const w0=document.querySelector(".wrap,.polls,.agenda"),st=w0?w0.scrollTop:0,ntv=$("nt")?$("nt").value:null;
   const cl0=$("cl"),cNear=!cl0||cl0.scrollHeight-cl0.scrollTop-cl0.clientHeight<60,cTop=cl0?cl0.scrollTop:0,civ=$("ci")?$("ci").value:"",cif=!!document.activeElement&&document.activeElement.id==="ci";
   const done=members.filter(m=>m.done).length,all=members.length,allDone=all>0&&done===all,pct=all?Math.round(done/all*100):0,openP=polls.filter(x=>!pClosed(x)).length;
-  $("body").innerHTML=`<div class="split ${tview==="res"?"split4":"split3"}"><aside class="card side"><div class="row"><button id="bk">← Nhóm</button><span class="sp"></span><button id="tx" class="dg" title="${isOwner()?"Xoá nhóm này":"Rời khỏi nhóm này"}">${isOwner()?"🗑️ Xoá nhóm":"🚪 Rời nhóm"}</button></div><h2>${isOwner()?"👑 ":""}${esc(team.name)}</h2>
+  $("body").innerHTML=`<div class="split team-layout ${tview==="res"?"split4":"split3"}"><aside class="card side team-sidebar"><div class="row"><button id="bk">← Nhóm</button><span class="sp"></span><button id="tx" class="dg" title="${isOwner()?"Xoá nhóm này":"Rời khỏi nhóm này"}">${isOwner()?"🗑️ Xoá nhóm":"🚪 Rời nhóm"}</button></div><h2 class="team-title">${isOwner()?"👑 ":""}${esc(team.name)}</h2>
    <div class="row">Mã: <span class="code">${esc(team.code)}</span><span class="sp"></span><button id="cp">Sao chép</button></div>
    <div class="mut">👑 Nhóm trưởng: <b>${esc(ownerName())}</b>${isOwner()?" (Bạn)":""} · Vai trò của bạn: <b>${ROLE_VI[myRole()]}</b></div>
    <button id="mb" class="mem-btn"><span>👥 Thành viên (${all})</span><small>${done}/${all} đã chốt</small></button><div class="bar"><i style="width:${pct}%"></i></div>
@@ -86,7 +86,7 @@ function drawTeam(){
    :tview==="vote"?`<p class="mut" style="margin:0">Tạo câu hỏi và các phương án để cả nhóm cùng bỏ phiếu. Bấm vào một phương án để vote, bấm lại để bỏ phiếu. Khi đóng, bình chọn được chuyển sang Lịch sử vote.</p><span class="sp"></span>${canEditTeam()?`<button class="p" id="pc">＋ Tạo bình chọn</button>`:viewerNote()}`
    :`<p class="mut" style="margin:0">${allDone?"✅ Mọi người đã chốt. Ô xanh lá = tất cả cùng rảnh.":"⏳ Mới "+done+"/"+all+" người chốt, kết quả tạm tính."} Ô xám có số = số người bận.</p>`}
    </aside>
-   <section class="card pane">${paneHtml()}</section>${rightCols()}</div>`;
+   <section class="card pane team-main-pane">${paneHtml()}</section>${rightCols()}</div>`;
   const w=document.querySelector(".wrap,.polls,.agenda");if(w)w.scrollTop=st;
   if(tview!=="vote")bindNav();bindNavBtns();
   $("bk").onclick=async()=>{await flush();team=null;sel=new Set();listTeams()};

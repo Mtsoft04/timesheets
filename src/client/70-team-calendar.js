@@ -52,7 +52,7 @@ function paneHtml(){
   if(tview==="cal")return calPane();
   if(tview==="room")return roomPane();
   return `<div class="ptop">${navBar()}<span class="sp"></span>${legend()}</div>${grid(k=>ctx.cell(k))}`;}
-const rightCols=()=>tview==="res"?`<div class="rcol">${freeCard()}${chatCard()}</div><div class="rcol">${meetCard()}</div>`:`<div class="rcol">${rightCards()}</div>`;
+const rightCols=()=>tview==="res"?`<div class="rcol team-aside">${freeCard()}${chatCard()}</div><div class="rcol team-aside">${meetCard()}</div>`:`<div class="rcol team-aside">${rightCards()}</div>`;
 const rightCards=()=>chatCard()+(tview==="mine"?noteCard():tview==="res"?freeCard()+meetCard():tview==="cal"?taskCard():tview==="room"?bookCard():historyCard());
 const viewerNote=()=>canEditTeam()?"":`<div class="vwnote">👁️ Bạn có vai trò <b>Chỉ xem</b>: xem được lịch, trả lời lời mời, bình chọn và chat, nhưng không sửa được lịch bận, không tạo sự kiện, công việc, bình chọn hay đặt phòng.</div>`;
 

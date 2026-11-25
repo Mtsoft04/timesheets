@@ -23,12 +23,12 @@ document.addEventListener("keydown",e=>{const m=$("lb");if(!m||m.hidden||lb.l.le
 
 function postsView(){
   ctx={cell:()=>({cls:""})};
-  $("body").innerHTML=`<div class="feedgrid"><div class="feedwrap"><div class="fcol">
+  $("body").innerHTML=`<div class="community-shell"><div class="community-hero"><span class="community-hero-icon" aria-hidden="true">✍️</span><div><h1>Bài viết</h1><p>Chia sẻ thông tin và kết nối với mọi người trong cộng đồng</p></div></div><div class="feedgrid community-layout"><div class="feedwrap"><div class="fcol">
    <div class="card composer"><div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:10px"><i class="av">${avInner(avUrl(),uname())}</i><textarea id="pbx" rows="2" maxlength="5000" placeholder="Bạn đang nghĩ gì?"></textarea></div>
     <div class="pimgs" id="ppv"></div>
     <div class="tpx" id="tpx"><span class="mut">Chủ đề:</span>${TOPICS.map(t=>`<button type="button" class="tg" data-ins="#${t.replace(/\s+/g,"-")} ">#${t}</button>`).join("")}</div><div class="tpx" id="tmn"></div>
     <div class="row" style="margin-top:10px"><label class="filebtn" for="pfi">🖼️ Thêm ảnh</label><input type="file" id="pfi" accept="image/*" multiple hidden><button type="button" id="pcode" title="Chèn mã nhóm của bạn vào bài viết">🔑 Chèn mã nhóm</button>${meta().phone?`<button type="button" id="pph" title="Chèn số điện thoại trong hồ sơ">📞 Chèn SĐT</button>`:""}<span class="mut" id="pcn"></span><span class="sp"></span><button class="p" id="pgo2">Đăng bài</button></div></div>
-   <div id="plist"></div></div></div>${peopleCard()}</div>`;
+   <div id="plist"></div></div></div>${peopleCard()}</div></div>`;
   initPeople();
   const tx=$("pbx");tx.oninput=()=>{tx.style.height="auto";tx.style.height=Math.min(tx.scrollHeight+2,260)+"px"};
   $("pfi").onchange=async e=>{const fs=[...e.target.files];e.target.value="";
