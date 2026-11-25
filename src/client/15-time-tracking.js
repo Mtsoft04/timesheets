@@ -57,9 +57,11 @@ async function startWorkLog(){
   const b=document.querySelector("[data-wl-start]");if(b)b.disabled=true;
   const rate=workLogBillingAvailable?Math.max(0,Number($("wl-rate").value)||0):0,billable=workLogBillingAvailable&&$("wl-billable").checked;
   const payload={user_id:user.id,team_id:selectedWorkLogTeam||null,work_date:fmt(now),task_id:wlTaskId(title),task_title:title,note:$("wl-note").value.trim(),start_at:now.toISOString()};if(workLogBillingAvailable){payload.billable=billable;payload.hourly_rate=billable?rate:0;}
-  const r=await SB.from("work_logs").insert(payload).select().single();
-  if(r.error){if(b)b.disabled=false;return say(/duplicate|unique/i.test(r.error.message)?"Bạn đang có một đồng hồ chạy. Hãy dừng đồng hồ đó trước.":"Không bắt đầu được: "+r.error.message);}
-  activeWorkLog=r.data;await loadWorkLogs();paintWorkLogs();say("▶ Đã bắt đầu bấm giờ.");
+  try{const r=await SB.from("work_logs").insert(payload).select().single();
+    if(r.error){if(b)b.disabled=false;return say(/duplicate|unique/i.test(r.error.message)?"Bạn đang có một đồng hồ chạy. Hãy dừng đồng hồ đó trước.":"Không bắt đầu được: "+r.error.message);}
+    if(!r.data){if(b)b.disabled=false;return say("Supabase không trả bản ghi giờ công đã lưu. Kiểm tra quyền SELECT/INSERT trên work_logs.");}
+    activeWorkLog=r.data;await loadWorkLogs();paintWorkLogs();say("▶ Đã bắt đầu bấm giờ.");
+  }catch(e){if(b)b.disabled=false;say("Không kết nối/lưu được giờ công: "+(e.message||e));}
 }
 async function stopWorkLog(){if(!activeWorkLog)return;const stop=document.querySelector("[data-wl-stop]");if(stop)stop.disabled=true;
   const r=await SB.from("work_logs").update({end_at:new Date().toISOString()}).eq("id",activeWorkLog.id).eq("user_id",user.id).is("end_at",null).select().maybeSingle();
@@ -82,8 +84,9 @@ async function saveWorkLog(row){
   const payload={team_id:teamId,work_date:fmt(start),task_id:wlTaskId(title),task_title:title,note:$("wlm-note").value.trim(),start_at:start.toISOString(),end_at:end.toISOString()};if(workLogBillingAvailable){payload.billable=billable;payload.hourly_rate=billable?rate:0;}
   const btn=$("wlm-save");btn.disabled=true;
   let q=row?SB.from("work_logs").update(payload).eq("id",row.id).eq("user_id",user.id):SB.from("work_logs").insert({...payload,user_id:user.id});
-  const r=await q.select().maybeSingle();if(r.error||!r.data){btn.disabled=false;return say("Không lưu được giờ làm: "+(r.error?r.error.message:"không tìm thấy bản ghi."));}
-  $("gm").hidden=true;await loadWorkLogs();paintWorkLogs();say(row?"✓ Đã cập nhật giờ làm.":"✓ Đã thêm giờ làm.");
+  try{const r=await q.select().maybeSingle();if(r.error||!r.data){btn.disabled=false;return say("Không lưu được giờ làm: "+(r.error?r.error.message:"không nhận được bản ghi sau khi lưu; kiểm tra quyền INSERT/SELECT và RLS trên work_logs."));}
+    $("gm").hidden=true;await loadWorkLogs();paintWorkLogs();say(row?"✓ Đã cập nhật giờ làm.":"✓ Đã thêm giờ làm.");
+  }catch(e){btn.disabled=false;say("Không kết nối/lưu được giờ công: "+(e.message||e));}
 }
 async function submitWorkLogWeek(){
   if(!selectedWorkLogTeam)return;const btn=document.querySelector("[data-wl-submit]");if(btn)btn.disabled=true;
